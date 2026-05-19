@@ -307,12 +307,13 @@ The tests cover:
 
 ## Current Limitations
 
+- This is a learning and portfolio project, not a production system.
 - Document knowledge is stored in memory and is reset when the app restarts.
 - Uploaded documents are not persisted to disk.
 - The app currently supports PDF and TXT files only.
 - There is no user authentication.
 - The FAISS vector store is local and in-memory for this version.
-- The chatbot can only answer from uploaded document context.
+- The chatbot is designed for retrieval-based question answering and does not currently support full-document summarisation.
 
 ## License
 
