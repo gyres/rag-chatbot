@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+</head>
+<body>
+    <main class="page">
+        <section class="hero">
+            <p class="eyebrow">FastAPI + LangChain + OpenAI</p>
+            <h1>RAG Chatbot</h1>
+            <p class="subtitle">
+                Upload a PDF or text file, then ask questions based on the document.
+            </p>
+        </section>
+
+        <section class="layout">
+            <aside class="panel">
+                <h2>Document</h2>
+
+                <form id="upload-form" class="stack">
+                    <label for="file-input">Upload PDF or TXT</label>
+                    <input id="file-input" type="file" accept=".pdf,.txt" required>
+                    <button type="submit">Upload document</button>
+                </form>
+
+                <div class="button-grid">
+                    <button type="button" class="secondary" data-reset="/reset/chat">
+                        Reset chat
+                    </button>
+                    <button type="button" class="secondary" data-reset="/reset/documents">
+                        Reset documents
+                    </button>
+                    <button type="button" class="danger" data-reset="/reset/all">
+                        Reset all
+                    </button>
+                </div>
+
+                <p id="status" class="status">Ready.</p>
+            </aside>
+
+            <section class="chat-panel">
+                <div id="chat-window" class="chat-window">
+                    <div class="message assistant">
+                        <strong>Assistant</strong>
+                        <p>Please upload a document first. Then ask a question about it.</p>
+                    </div>
+                </div>
+
+                <form id="message-form" class="message-form">
+                    <input
+                        id="message-input"
+                        type="text"
+                        placeholder="Ask a question about your uploaded document..."
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="submit">Send</button>
+                </form>
+            </section>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', path='/app.js') }}"></script>
+</body>
+</html>
