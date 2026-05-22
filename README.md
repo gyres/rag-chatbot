@@ -125,7 +125,7 @@ Then open `.env` and add your OpenAI API settings:
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
 OPENAI_MODEL=your_chat_model_name_here
-OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+OPENAI_EMBEDDING_MODEL=your_embedding_model_name_here
 OPENAI_TEMPERATURE=0.2
 
 CHUNK_SIZE=1000
@@ -137,6 +137,12 @@ MAX_UPLOAD_SIZE_MB=10
 Do not commit your real `.env` file to GitHub.
 
 ### 3. Choose one setup option
+
+You only need to choose one of the setup options below.
+
+- Choose **Option A** if you want to run the project with Docker.
+- Choose **Option B** if you use Conda for Python environments.
+- Choose **Option C** if you prefer pip or an existing Python environment.
 
 #### Option A: Run with Docker
 
@@ -234,7 +240,7 @@ python -m uvicorn rag_chatbot.main:app --reload
 Open the app in your browser:
 
 ```text
-http://localhost:8000
+http://127.0.0.1:8000
 ```
 
 ## How to Use
