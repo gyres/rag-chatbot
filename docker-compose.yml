@@ -1,0 +1,8 @@
+services:
+  rag-chatbot:
+    build: .
+    container_name: rag-chatbot
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
