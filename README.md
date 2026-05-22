@@ -1,8 +1,8 @@
 # RAG Chatbot
 
-A local Retrieval-Augmented Generation (RAG) chatbot built with FastAPI, LangChain, OpenAI, and FAISS.
+A local Retrieval-Augmented Generation (RAG) chatbot built with FastAPI, LangChain, OpenAI, FAISS, and Docker.
 
-The application allows users to upload a PDF or text file, ask questions about the uploaded document, and receive answers grounded in retrieved document context.
+The application allows users to upload a PDF or TXT document, ask questions about the uploaded document, and receive answers grounded in retrieved document context.
 
 ## Screenshot
 
@@ -18,6 +18,7 @@ The application allows users to upload a PDF or text file, ask questions about t
 - Reset chat history, document knowledge, or both
 - Simple web interface built with HTML, CSS, and JavaScript
 - API endpoints built with FastAPI
+- Containerised setup with Docker and Docker Compose
 - Automated tests with pytest
 
 ## Tech Stack
@@ -31,6 +32,8 @@ The application allows users to upload a PDF or text file, ask questions about t
 - HTML, CSS, JavaScript
 - Pydantic
 - pytest
+- Docker
+- Docker Compose
 - conda-forge
 
 ## Project Structure
@@ -39,10 +42,12 @@ The application allows users to upload a PDF or text file, ask questions about t
 rag-chatbot/
 ├── README.md
 ├── LICENSE
+├── Dockerfile
+├── docker-compose.yml
+├── .dockerignore
 ├── environment.yml
 ├── requirements.txt
 ├── pytest.ini
-├── .env
 ├── .env.example
 ├── .gitignore
 ├── .vscode/
@@ -84,23 +89,74 @@ rag-chatbot/
     └── test_web_pages.py
 ```
 
-## Setup Options
+## Setup
 
-You can set up this project using either:
+You can run this project using one of the following methods:
 
-1. `conda` with `environment.yml`, recommended if you are using Anaconda or Miniconda.
-2. `pip` with `requirements.txt`, useful for standard Python virtual environments.
+1. Docker with `docker-compose.yml`, recommended for the fastest reproducible setup.
+2. Conda with `environment.yml`, recommended if you are using Anaconda or Miniconda.
+3. Pip with `requirements.txt`, useful for standard Python virtual environments.
 
-## Option 1: Setup with conda
+The commands below use Git Bash as the main terminal. PowerShell alternatives are shown only when the command syntax is different.
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/rag-chatbot.git
+git clone https://github.com/gyres/rag-chatbot.git
 cd rag-chatbot
 ```
 
-### 2. Create the conda environment
+### 2. Create the environment variables file
+
+Git Bash:
+
+```bash
+cp .env.example .env
+```
+
+PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Then open `.env` and add your OpenAI API settings:
+
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_MODEL=your_chat_model_name_here
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+OPENAI_TEMPERATURE=0.2
+
+CHUNK_SIZE=1000
+CHUNK_OVERLAP=100
+RETRIEVAL_K=3
+MAX_UPLOAD_SIZE_MB=10
+```
+
+Do not commit your real `.env` file to GitHub.
+
+### 3. Choose one setup option
+
+#### Option A: Run with Docker
+
+Make sure Docker Desktop is installed and running.
+
+```bash
+docker compose up --build
+```
+
+To stop the application, press `Ctrl + C` in the terminal.
+
+Then remove the stopped container:
+
+```bash
+docker compose down
+```
+
+#### Option B: Run with conda
+
+Create and activate the conda environment:
 
 ```bash
 conda env create -f environment.yml
@@ -114,155 +170,71 @@ conda env update -f environment.yml --prune
 conda activate rag-chatbot
 ```
 
-### 3. Create the environment variables file
+Run the application.
 
-For Windows PowerShell:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-For macOS/Linux:
+Git Bash:
 
 ```bash
-cp .env.example .env
+PYTHONPATH=src python -m uvicorn rag_chatbot.main:app --reload
 ```
 
-Then open `.env` and add your OpenAI API settings:
-
-```env
-OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-4.1-mini
-OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-OPENAI_TEMPERATURE=0.2
-
-CHUNK_SIZE=1000
-CHUNK_OVERLAP=100
-RETRIEVAL_K=3
-MAX_UPLOAD_SIZE_MB=10
-```
-
-Do not commit your real `.env` file to GitHub.
-
-### 4. Run the application
-
-Because this project uses a `src/` layout, set `PYTHONPATH` before running the app.
-
-For Windows PowerShell:
+PowerShell:
 
 ```powershell
 $env:PYTHONPATH="src"
 python -m uvicorn rag_chatbot.main:app --reload
 ```
 
-For macOS/Linux:
+#### Option C: Run with pip
 
-```bash
-export PYTHONPATH=src
-python -m uvicorn rag_chatbot.main:app --reload
-```
-
-Then open the app in your browser:
-
-```text
-http://127.0.0.1:8000
-```
-
-## Option 2: Alternative Setup with pip
-
-If you prefer to use `pip` instead of conda, you can create a virtual environment and install the dependencies from `requirements.txt`.
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/rag-chatbot.git
-cd rag-chatbot
-```
-
-### 2. Create a virtual environment
+Create a virtual environment:
 
 ```bash
 python -m venv .venv
 ```
 
-### 3. Activate the virtual environment
+Activate the virtual environment.
 
-For Windows PowerShell:
+Git Bash:
+
+```bash
+source .venv/Scripts/activate
+```
+
+PowerShell:
 
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
 
-For macOS/Linux:
-
-```bash
-source .venv/bin/activate
-```
-
-### 4. Upgrade pip
+Upgrade pip and install dependencies:
 
 ```bash
 python -m pip install --upgrade pip
-```
-
-### 5. Install dependencies
-
-```bash
 pip install -r requirements.txt
 ```
 
-### 6. Create the environment variables file
+Run the application.
 
-For Windows PowerShell:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-For macOS/Linux:
+Git Bash:
 
 ```bash
-cp .env.example .env
+PYTHONPATH=src python -m uvicorn rag_chatbot.main:app --reload
 ```
 
-Then open `.env` and add your OpenAI API settings:
-
-```env
-OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-4.1-mini
-OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-OPENAI_TEMPERATURE=0.2
-
-CHUNK_SIZE=1000
-CHUNK_OVERLAP=100
-RETRIEVAL_K=3
-MAX_UPLOAD_SIZE_MB=10
-```
-
-Do not commit your real `.env` file to GitHub.
-
-### 7. Run the application
-
-Because this project uses a `src/` layout, set `PYTHONPATH` before running the app.
-
-For Windows PowerShell:
+PowerShell:
 
 ```powershell
 $env:PYTHONPATH="src"
 python -m uvicorn rag_chatbot.main:app --reload
 ```
 
-For macOS/Linux:
+### 4. Open the application
 
-```bash
-export PYTHONPATH=src
-python -m uvicorn rag_chatbot.main:app --reload
-```
-
-Then open the app in your browser:
+Open the app in your browser:
 
 ```text
-http://127.0.0.1:8000
+http://localhost:8000
 ```
 
 ## How to Use
@@ -309,9 +281,10 @@ The tests cover:
 
 - This is a learning and portfolio project, not a production system.
 - Document knowledge is stored in memory and is reset when the app restarts.
-- Uploaded documents are not persisted to disk.
+- Uploaded documents are processed through temporary files and are not persisted after processing.
 - The app currently supports PDF and TXT files only.
 - There is no user authentication.
+- The app uses one in-memory RAG service per running application process, so it is not designed for multi-user production use.
 - The FAISS vector store is local and in-memory for this version.
 - The chatbot is designed for retrieval-based question answering and does not currently support full-document summarisation.
 
